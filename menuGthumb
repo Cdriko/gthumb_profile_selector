@@ -18,7 +18,7 @@ while read p; do
 	datas=( $p )
 
 
-	#sed 's/"//g' 
+	
 
 	title[$id]=${datas[0]}
 	configfile[$id]=${datas[1]}
@@ -40,8 +40,7 @@ checkreponse(){
         directory_choix=$(eval echo ${directory[$choix]}) 
 
 
-	#if [ -w ${sharefile[$choix]} ]&&[ -w ${configfile[$choix]} ];then
-		#le lien est valable , création de la configuration
+	
 		echo "configuration ..."${title[$choix]}
 		rm -r ~/.config/gthumb
 		ln -s ${config_file} ~/.config/gthumb
@@ -49,10 +48,7 @@ checkreponse(){
 		ln -s ${share_file} ~/.local/share/gthumb
 		gthumb ${directory_choix}& 
 
-	#else
-	#	echo "mauvais choix : essaye encore"
-	#	menu
-	#fi
+	
 
 }
 

@@ -3,6 +3,11 @@
 #licence cc-by sa 8_2013
 #cedric Doutriaux
 
+git clone https://github.com/Cdriko/gthumb_profile_selector.git
+cd gthumb_profile_selector
+cp gthumbselector.cfg.dist gthumbselector.cfg
+gedit gthumbselector.cfg
+
 
 Rename gthumbselector.cfg.dist to  gthumbselector.cfg
 edit gthumbselector.cfg
