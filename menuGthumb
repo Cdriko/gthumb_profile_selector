@@ -1,0 +1,124 @@
+#!/bin/bash
+#ability to select multiple profiles in gthumb
+#cdriko@free.fr
+#licence cc-by sa 8_2013
+#cedric Doutriaux
+
+#list catalogs locations in  gthumbselector.cfg
+#[name] [congif path] [catalogs path] [photo directory path]
+
+
+echo "reading gthumbselector.cfg"
+
+id=0
+
+while read p; do
+  echo "$id==============="
+
+	datas=( $p )
+
+
+	#sed 's/"//g' 
+
+	title[$id]=${datas[0]}
+	configfile[$id]=${datas[1]}
+	sharefile[$id]=${datas[2]}
+	directory[$id]=${datas[3]}
+
+	echo "${title[$id]}"
+
+	id=$(( $id + 1 ))
+
+done < gthumbselector.cfg 
+
+
+
+checkreponse(){
+
+        share_file=$(eval echo ${sharefile[$choix]}) 
+        config_file=$(eval echo ${sharefile[$choix]}) 
+        directory_choix=$(eval echo ${directory[$choix]}) 
+
+
+	#if [ -w ${sharefile[$choix]} ]&&[ -w ${configfile[$choix]} ];then
+		#le lien est valable , création de la configuration
+		echo "configuration ..."${title[$choix]}
+		rm -r ~/.config/gthumb
+		ln -s ${config_file} ~/.config/gthumb
+		rm -r ~/.local/share/gthumb
+		ln -s ${share_file} ~/.local/share/gthumb
+		gthumb ${directory_choix}& 
+
+	#else
+	#	echo "mauvais choix : essaye encore"
+	#	menu
+	#fi
+
+}
+
+
+checkLocalConfig(){
+    #check if the local custom config exist
+    if [ -w ~/.config/gthumb_local ];then
+    echo "local config exist"
+    else
+    #create localconfigs directories
+        echo "creation des configs locales"
+        mkdir ~/.config/gthumb_local
+        cp -r ~/.config/gthumb/* ~/.config/gthumb_local
+        mkdir ~/.local/share/gthumb_local
+        cp -r ~/.local/share/gthumb/* ~/.local/share/gthumb_local
+    
+    fi
+        }
+
+
+
+menu(){
+    checkLocalConfig
+	if [ -w ~/.config/gthumb ];then
+		echo "la config est libre"
+	fi
+
+	listechoix="";
+
+entree=0
+	while [ $entree -lt $id ]; do
+	
+   
+        share_file=$(eval echo ${sharefile[$entree]}) 
+        config_file=$(eval echo ${sharefile[$entree]}) 
+    
+		#verify if config files are accessibles
+       
+		if [ -w ${share_file} ]&&[ -w  ${config_file} ];then
+		
+			listechoix="${listechoix}
+${entree} ${title[$entree]}"
+		else
+			echo "${title[$entree]} est actuellement inaccessible "
+				
+			if [ -w  ${share_file} ];then
+				echo " [ ${share_file} ] OK "
+			else
+				echo " [ ${share_file} ] merdoie "
+			fi
+			if [ -w ${config_file} ];then
+				echo " [ ${config_file} ] OK "
+			else
+				echo " [ ${config_file} ] merdoie "
+			fi
+		fi
+	entree=$(( $entree + 1 ))
+
+	done
+
+#choice menu
+	choix=$(zenity --list==$listechoix --column="N°" --column="catalogue"   --print-column=1 --title="catalogue" --text="Choisir une des configurations disponibles");
+
+choix=${choix[0]}
+
+checkreponse
+
+}
+menu

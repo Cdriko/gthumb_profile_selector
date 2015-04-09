@@ -1,0 +1,14 @@
+#ability to select multiple profiles in gthumb /linux
+#cdriko@free.fr
+#licence cc-by sa 8_2013
+#cedric Doutriaux
+
+
+Rename gthumbselector.cfg.dist to  gthumbselector.cfg
+edit gthumbselector.cfg
+add lines after the existing for listing other catalogs locations
+#[name] [congif path] [catalogs path] [photo directory path]
+
+(create [congif path] and [catalogs path] if they don't exists)
+
+
